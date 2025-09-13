@@ -11,6 +11,10 @@ results/
 # Test scripts
 misc/
 
+# Old models
+models/MatchboxNet_3x2x64_12.pt
+models/MatchboxNet_3x2x64_all.pt
+
 # ---------------------------
 
 # Byte-compiled / optimized / DLL files
