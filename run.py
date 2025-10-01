@@ -11,6 +11,8 @@ SAMPLE_RATE = 16000
 CHUNK_DURATION = 1.0
 CHUNK_SIZE = int(SAMPLE_RATE * CHUNK_DURATION)
 
+ENERGY_THRESHOLD = 0.01
+
 # Regular PyTorch model
 # MODEL_PATH = r"models/MatchboxNet_3x2x64_12_state_dict.pt"
 # model = MatchboxNet(in_channels=64, n_classes=12, B=3, S=2)
@@ -45,7 +47,13 @@ def idx_to_label(i):
 def callback(indata, frames, time, status):
     if status:
         print(status)
+
     audio = torch.from_numpy(indata.T)
+
+    rms = torch.sqrt(torch.mean(audio ** 2))
+    if rms < ENERGY_THRESHOLD:
+        print("Prediction: SIL")
+
     X = extract_features(audio)
     y_pred = run_inference(X, model)
     print("Prediction:", idx_to_label(y_pred))
